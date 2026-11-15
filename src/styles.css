@@ -1,0 +1,158 @@
+:root {
+  --ink: #131211; --concrete: #211f1d; --dust: #34302c; --bone: #f2eee5;
+  --red: #e2252b; --amber: #ffc21a; --ok: #52d18a;
+  --head: 'Karantina', 'Assistant', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
+/* 1rem = 20px במסך טוטם 1080x1920; מתכווץ בטלפון ומוגבל בשולחן עבודה */
+html { font-size: clamp(10px, 1.85vw, 22px); }
+html, body, #root { height: 100%; }
+body {
+  background: var(--ink); color: var(--bone); direction: rtl;
+  font-family: 'Assistant', system-ui, sans-serif; font-weight: 400;
+  user-select: none; -webkit-user-select: none; overscroll-behavior: none; overflow: hidden;
+}
+button { font: inherit; color: inherit; border: 0; cursor: pointer; background: none; touch-action: manipulation; }
+
+.stage {
+  position: relative; height: 100dvh; width: 100%; max-width: 62rem; margin-inline: auto;
+  display: flex; flex-direction: column; overflow: hidden;
+  background:
+    radial-gradient(120% 60% at 50% 0%, #2a2623 0%, transparent 60%),
+    repeating-linear-gradient(0deg, #161413 0 3px, #181615 3px 6px);
+}
+.tape {
+  flex: none; height: 1.6rem;
+  background: repeating-linear-gradient(-45deg, var(--amber) 0 1.6rem, var(--ink) 1.6rem 3.2rem);
+}
+.seismo { flex: none; height: 6rem; overflow: hidden; direction: ltr; border-bottom: .2rem solid var(--dust); }
+.seismo svg { width: 200%; height: 100%; animation: roll 14s linear infinite; }
+.seismo path { fill: none; stroke: var(--red); stroke-width: 3; vector-effect: non-scaling-stroke; }
+@keyframes roll { to { transform: translateX(-50%); } }
+
+.screen {
+  position: relative; flex: 1; min-height: 0; overflow-y: auto;
+  padding: 3.4rem 3.4rem 4rem; display: flex; flex-direction: column; gap: 2.4rem;
+  animation: land .55s cubic-bezier(.2, .8, .3, 1);
+}
+@keyframes land {
+  0% { transform: translateY(-3rem); opacity: 0; } 55% { transform: translateY(.7rem); opacity: 1; }
+  78% { transform: translateY(-.3rem); } 100% { transform: none; }
+}
+h1, h2, .score, .fb strong, .badge { font-family: var(--head); }
+h1 { font-size: 10.5rem; line-height: .86; font-weight: 700; color: var(--bone); max-width: 14ch; }
+h2 { font-size: 5.6rem; line-height: .95; font-weight: 700; color: var(--red); }
+.lead { font-size: 2.2rem; line-height: 1.4; color: #cfc9bd; max-width: 34ch; }
+
+/* סרגל עליון: לוגו מימין, מסך מלא משמאל */
+.topbar { flex: none; display: flex; align-items: center; justify-content: space-between; padding: 1.4rem 3.4rem 1.2rem; gap: 2rem; }
+.logo { display: flex; }
+.logo img { height: 7rem; display: block; }
+.fsbtn { font-size: 2.2rem; font-weight: 800; padding: 1.2rem 2.2rem; min-height: 6rem; border: .25rem solid var(--bone); }
+.fsbtn:active { background: var(--dust); }
+
+/* מצב צפייה: כל תשומת הלב לסרטון */
+.stage.focus { background: #000; }
+.stage.focus .seismo, .stage.focus .hint { display: none; }
+.stage.focus .topbar { padding-block: .8rem; }
+.stage.focus .logo img { height: 4.6rem; }
+.stage.focus .screen { padding-inline: 0; justify-content: center; gap: 2.2rem; }
+.stage.focus .screen > h2, .stage.focus .screen > .back, .stage.focus .row, .stage.focus .times { margin-inline: 3.4rem; }
+.stage.focus h2 { font-size: 6.4rem; }
+.stage.focus .frame { border-inline: 0; border-width: .3rem 0; }
+.stage.focus .player { gap: 1.8rem; }
+.stage.focus .bar { margin-inline: 3.4rem; height: 1.6rem; }
+.stage.focus .btn { font-size: 2.8rem; min-height: 8rem; }
+.player.fs { position: fixed; inset: 0; z-index: 50; background: #000; justify-content: center; padding: 0; }
+.player.fs .frame { border: 0; max-height: none; }
+.player.fs .bar, .player.fs .times, .player.fs .row { margin-inline: 3.4rem; }
+.player.fs .btn { font-size: 2.8rem; min-height: 8rem; }
+
+/* סדק */
+.crack { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .5; }
+.crack polyline { fill: none; stroke: #000; stroke-width: 1.4; vector-effect: non-scaling-stroke; stroke-dasharray: 900; stroke-dashoffset: 900; animation: draw 2.4s .3s ease-out forwards; }
+.crack polyline:nth-child(2) { animation-delay: 1.2s; } .crack polyline:nth-child(3) { animation-delay: 1.6s; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+
+/* רעד תקופתי של הכותרת */
+.tremor { animation: tremor 7s infinite; }
+@keyframes tremor {
+  0%, 84%, 100% { transform: none; }
+  86% { transform: translate(.5rem, -.25rem) rotate(.5deg); } 88% { transform: translate(-.6rem, .25rem) rotate(-.6deg); }
+  90% { transform: translate(.4rem, .2rem) rotate(.4deg); } 92% { transform: translate(-.3rem, -.2rem); } 95% { transform: translate(.15rem, 0); }
+}
+.quake { animation: quake .7s; }
+.quake::after { content: ''; position: absolute; inset: 0; background: rgba(226, 37, 43, .22); pointer-events: none; animation: flash .7s forwards; }
+@keyframes quake {
+  0%, 100% { transform: none; } 10% { transform: translate(-1.2rem, .5rem) rotate(-.4deg); } 25% { transform: translate(1.1rem, -.6rem) rotate(.4deg); }
+  40% { transform: translate(-.8rem, .4rem); } 55% { transform: translate(.6rem, -.3rem); } 75% { transform: translate(-.3rem, .2rem); }
+}
+@keyframes flash { to { opacity: 0; } }
+
+/* תפריט */
+.cards { display: flex; flex-direction: column; gap: 2rem; margin-top: auto; position: relative; }
+.card {
+  display: flex; flex-direction: column; gap: 1.4rem; text-align: start;
+  padding: 2.6rem 2.8rem 4rem; background: var(--concrete); border-inline-start: 1.1rem solid var(--red);
+  clip-path: polygon(0 0, 100% 0, 100% 86%, 93% 100%, 71% 90%, 49% 100%, 27% 89%, 9% 100%, 0 92%);
+  transition: transform .12s;
+}
+.card:active { transform: scale(.98) rotate(-.3deg); background: var(--dust); }
+.card b { font-family: var(--head); font-size: 5.2rem; line-height: 1; font-weight: 700; display: block; }
+.card small { font-size: 2.1rem; color: #bdb6a8; }
+.badge { align-self: flex-start; font-size: 2.8rem; color: var(--ink); background: var(--amber); padding: .2rem 1.4rem; line-height: 1.25; }
+.card.is-done { border-inline-start-color: var(--ok); }
+.card.is-done .badge { background: var(--ok); }
+.final { font-size: 2.6rem; font-weight: 800; color: var(--amber); }
+
+/* וידאו */
+.back { align-self: flex-start; font-size: 2.2rem; font-weight: 700; padding: 1rem 2rem; border: .2rem solid var(--dust); }
+.player { display: flex; flex-direction: column; gap: 1.4rem; }
+.frame { position: relative; background: #000; aspect-ratio: 16 / 9; border: .3rem solid var(--dust); }
+video { width: 100%; height: 100%; display: block; object-fit: contain; }
+.bigplay { position: absolute; inset: 0; margin: auto; width: 11rem; height: 11rem; border-radius: 50%; background: rgba(226, 37, 43, .92); display: grid; place-items: center; }
+.bigplay svg { width: 6rem; fill: #fff; }
+.bar { direction: ltr; height: 1.2rem; background: var(--dust); } .bar i { display: block; height: 100%; background: var(--red); }
+.times { direction: ltr; display: flex; justify-content: space-between; font-size: 1.8rem; color: #bdb6a8; }
+.row { display: flex; gap: 1.6rem; flex-wrap: wrap; }
+.btn { font-size: 2.6rem; font-weight: 800; padding: 1.5rem 3.4rem; min-height: 7rem; background: var(--red); color: #fff; flex: 1; transition: transform .1s; }
+.btn:active { transform: scale(.97); }
+.btn.ghost { background: transparent; border: .25rem solid var(--bone); }
+
+/* שאלות */
+.steps { display: flex; gap: 1rem; } .steps i { flex: 1; height: 1.1rem; background: var(--dust); }
+.steps i.ok { background: var(--ok); } .steps i.now { background: var(--amber); }
+.q { font-size: 3.7rem; line-height: 1.22; font-weight: 800; }
+.opts { display: flex; flex-direction: column; gap: 1.5rem; }
+.opt {
+  text-align: start; font-size: 2.6rem; line-height: 1.3; font-weight: 700; min-height: 8rem; padding: 1.6rem 2.4rem;
+  background: var(--concrete); border: .25rem solid var(--dust); transition: transform .1s, background .2s;
+}
+.opt:active { transform: scale(.985); }
+.opt.right { background: var(--ok); color: var(--ink); border-color: var(--ok); }
+.opt.wrong { background: var(--red); border-color: var(--red); animation: quake .6s; }
+.opt.dim { opacity: .35; }
+.fb { display: flex; flex-direction: column; gap: 1.2rem; padding: 2.2rem 2.6rem; background: var(--bone); color: var(--ink); animation: land .4s; }
+.fb strong { font-size: 4.4rem; line-height: 1; } .fb.good strong { color: #12804a; } .fb.bad strong { color: var(--red); }
+.fb span { font-size: 2.3rem; line-height: 1.35; font-weight: 700; }
+
+/* סיכום */
+.result { align-items: flex-start; }
+.score { font-size: 24rem; line-height: .85; font-weight: 700; margin-top: 2rem; }
+.score span { font-size: 12rem; color: var(--red); }
+.verdict { font-size: 4.4rem; font-weight: 800; margin-bottom: 2rem; }
+.result .row { width: 100%; margin-top: auto; }
+
+/* שולחן עבודה לרוחב */
+@media (orientation: landscape) {
+  .stage { max-width: none; }
+  .screen { padding: 2.4rem 4rem; gap: 1.6rem; }
+  h1 { font-size: 7rem; max-width: none; } h2 { font-size: 4rem; }
+  .cards { flex-direction: row; margin-top: 1rem; } .card { flex: 1; }
+  .card b { font-size: 3.6rem; } .card small { font-size: 1.6rem; } .badge { font-size: 2rem; }
+  .player { max-width: 100rem; } .frame { max-height: 52vh; margin-inline: auto; }
+  .stage.focus .frame { max-height: 62vh; } .player.fs .frame { max-height: 78vh; }
+  .opts { display: grid; grid-template-columns: 1fr 1fr; } .q { font-size: 3rem; } .opt { font-size: 2.1rem; min-height: 6rem; }
+  .score { font-size: 14rem; } .score span { font-size: 7rem; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; } .crack polyline { stroke-dashoffset: 0; } }
