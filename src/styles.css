@@ -15,7 +15,7 @@ body {
 button { font: inherit; color: inherit; border: 0; cursor: pointer; background: none; touch-action: manipulation; }
 
 .stage {
-  position: relative; height: 100dvh; width: 100%; max-width: 62rem; margin-inline: auto;
+  position: relative; height: 100dvh; width: 100%;
   display: flex; flex-direction: column; overflow: hidden;
   background:
     radial-gradient(120% 60% at 50% 0%, #2a2623 0%, transparent 60%),
@@ -73,8 +73,9 @@ h2 { font-size: 5.6rem; line-height: .95; font-weight: 700; color: var(--red); }
 @keyframes flash { to { opacity: 0; } }
 
 /* תפריט */
-.cards { display: flex; flex-direction: column; gap: 2rem; margin-top: auto; position: relative; }
+.cards { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 2rem; position: relative; }
 .card {
+  flex: 1; min-height: 0; justify-content: center; align-items: flex-start;
   display: flex; flex-direction: column; gap: 1.4rem; text-align: start;
   padding: 2.6rem 2.8rem 4rem; background: var(--concrete); border-inline-start: 1.1rem solid var(--red);
   clip-path: polygon(0 0, 100% 0, 100% 86%, 93% 100%, 71% 90%, 49% 100%, 27% 89%, 9% 100%, 0 92%);
@@ -126,7 +127,7 @@ video { width: 100%; height: 100%; display: block; object-fit: contain; }
 .score { font-size: 24rem; line-height: .85; font-weight: 700; margin-top: 2rem; }
 .score span { font-size: 12rem; color: var(--red); }
 .verdict { font-size: 4.4rem; font-weight: 800; margin-bottom: 2rem; }
-.result .row { width: 100%; margin-top: auto; }
+.result .row { width: 100%; margin-top: 1rem; }
 
 /* שולחן עבודה לרוחב */
 @media (orientation: landscape) {
