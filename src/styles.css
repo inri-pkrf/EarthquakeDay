@@ -4,8 +4,8 @@
   --head: 'Karantina', 'Assistant', sans-serif;
 }
 * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
-/* 1rem = 20px במסך טוטם 1080x1920; מתכווץ בטלפון ומוגבל בשולחן עבודה */
-html { font-size: clamp(10px, 1.85vw, 22px); }
+/* 1rem = 14px במסך טוטם 1080x1920; הפריסה מתכווצת בפרופורציה לכל מסך אנכי, בלי גלילה */
+html { font-size: clamp(5px, min(1.3vw, .73vh), 22px); }
 html, body, #root { height: 100%; }
 body {
   background: var(--ink); color: var(--bone); direction: rtl;
@@ -31,7 +31,7 @@ button { font: inherit; color: inherit; border: 0; cursor: pointer; background: 
 @keyframes roll { to { transform: translateX(-50%); } }
 
 .screen {
-  position: relative; flex: 1; min-height: 0; overflow-y: auto;
+  position: relative; flex: 1; min-height: 0; overflow: hidden;
   padding: 3.4rem 3.4rem 4rem; display: flex; flex-direction: column; gap: 2.4rem;
   animation: land .55s cubic-bezier(.2, .8, .3, 1);
 }
@@ -50,23 +50,6 @@ h2 { font-size: 5.6rem; line-height: .95; font-weight: 700; color: var(--red); }
 .logo img { height: 7rem; display: block; }
 .fsbtn { font-size: 2.2rem; font-weight: 800; padding: 1.2rem 2.2rem; min-height: 6rem; border: .25rem solid var(--bone); }
 .fsbtn:active { background: var(--dust); }
-
-/* מצב צפייה: כל תשומת הלב לסרטון */
-.stage.focus { background: #000; }
-.stage.focus .seismo, .stage.focus .hint { display: none; }
-.stage.focus .topbar { padding-block: .8rem; }
-.stage.focus .logo img { height: 4.6rem; }
-.stage.focus .screen { padding-inline: 0; justify-content: center; gap: 2.2rem; }
-.stage.focus .screen > h2, .stage.focus .screen > .back, .stage.focus .row, .stage.focus .times { margin-inline: 3.4rem; }
-.stage.focus h2 { font-size: 6.4rem; }
-.stage.focus .frame { border-inline: 0; border-width: .3rem 0; }
-.stage.focus .player { gap: 1.8rem; }
-.stage.focus .bar { margin-inline: 3.4rem; height: 1.6rem; }
-.stage.focus .btn { font-size: 2.8rem; min-height: 8rem; }
-.player.fs { position: fixed; inset: 0; z-index: 50; background: #000; justify-content: center; padding: 0; }
-.player.fs .frame { border: 0; max-height: none; }
-.player.fs .bar, .player.fs .times, .player.fs .row { margin-inline: 3.4rem; }
-.player.fs .btn { font-size: 2.8rem; min-height: 8rem; }
 
 /* סדק */
 .crack { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: .5; }
@@ -107,8 +90,10 @@ h2 { font-size: 5.6rem; line-height: .95; font-weight: 700; color: var(--red); }
 
 /* וידאו */
 .back { align-self: flex-start; font-size: 2.2rem; font-weight: 700; padding: 1rem 2rem; border: .2rem solid var(--dust); }
-.player { display: flex; flex-direction: column; gap: 1.4rem; }
-.frame { position: relative; background: #000; aspect-ratio: 16 / 9; border: .3rem solid var(--dust); }
+.player { position: fixed; inset: 0; z-index: 50; background: #000; display: flex; flex-direction: column; justify-content: center; gap: 2.4rem; }
+.player .bar, .player .row { margin-inline: 3rem; }
+.player .btn { font-size: 3rem; min-height: 9rem; }
+.frame { position: relative; background: #000; aspect-ratio: 16 / 9; width: 100%; }
 video { width: 100%; height: 100%; display: block; object-fit: contain; }
 .bigplay { position: absolute; inset: 0; margin: auto; width: 11rem; height: 11rem; border-radius: 50%; background: rgba(226, 37, 43, .92); display: grid; place-items: center; }
 .bigplay svg { width: 6rem; fill: #fff; }
@@ -145,13 +130,13 @@ video { width: 100%; height: 100%; display: block; object-fit: contain; }
 
 /* שולחן עבודה לרוחב */
 @media (orientation: landscape) {
+  html { font-size: clamp(8px, 1.5vh, 22px); }
   .stage { max-width: none; }
   .screen { padding: 2.4rem 4rem; gap: 1.6rem; }
   h1 { font-size: 7rem; max-width: none; } h2 { font-size: 4rem; }
   .cards { flex-direction: row; margin-top: 1rem; } .card { flex: 1; }
   .card b { font-size: 3.6rem; } .card small { font-size: 1.6rem; } .badge { font-size: 2rem; }
-  .player { max-width: 100rem; } .frame { max-height: 52vh; margin-inline: auto; }
-  .stage.focus .frame { max-height: 62vh; } .player.fs .frame { max-height: 78vh; }
+  .frame { max-height: 76vh; margin-inline: auto; }
   .opts { display: grid; grid-template-columns: 1fr 1fr; } .q { font-size: 3rem; } .opt { font-size: 2.1rem; min-height: 6rem; }
   .score { font-size: 14rem; } .score span { font-size: 7rem; }
 }

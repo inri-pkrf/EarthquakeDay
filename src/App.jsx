@@ -40,25 +40,15 @@ function Player({ v, onEnd, onSkip, playingRef }) {
   const [p, setP] = useState(false);
   const [t, setT] = useState(0);
   const [d, setD] = useState(0);
-  const [fs, setFs] = useState(false); // מסך מלא אמיתי או מצב "קולנוע" כשהדפדפן לא תומך
-  const box = useRef(null);
   useEffect(() => {
     ref.current?.play().catch(() => {});
-    const onFs = () => setFs(document.fullscreenElement === box.current);
-    document.addEventListener('fullscreenchange', onFs);
-    return () => {
-      document.removeEventListener('fullscreenchange', onFs);
-      playingRef.current = false;
-    };
+    // הלחיצה על כרטיס הסרטון מאשרת מעבר ישיר למסך מלא (נשאר במסך מלא גם אחרי הסרטון)
+    if (document.fullscreenEnabled && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+    return () => { playingRef.current = false; };
   }, []);
-  const toggleFs = () => {
-    if (document.fullscreenEnabled) {
-      document.fullscreenElement ? document.exitFullscreen() : box.current.requestFullscreen().catch(() => setFs(true));
-    } else setFs((x) => !x);
-  };
   const toggle = () => (ref.current.paused ? ref.current.play() : ref.current.pause());
   return (
-    <div className={`player ${fs ? 'fs' : ''}`} ref={box}>
+    <div className="player">
       <div className="frame">
         <video
           ref={ref} src={v.src} playsInline preload="auto" onClick={toggle}
@@ -69,16 +59,14 @@ function Player({ v, onEnd, onSkip, playingRef }) {
           onEnded={onEnd}
         />
         {!p && (
-          <button className="bigplay" onClick={toggle} aria-label="הפעלה">
+          <button className="bigplay" onClick={toggle} aria-label="המשך צפייה">
             <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
           </button>
         )}
       </div>
       <div className="bar"><i style={{ width: d ? `${(t / d) * 100}%` : 0 }} /></div>
-      <div className="times"><span>{fmt(t)}</span><span>{d ? fmt(d) : ''}</span></div>
       <div className="row">
-        <button className="btn ghost" onClick={toggle}>{p ? 'השהיה' : 'הפעלה'}</button>
-        <button className="btn ghost" onClick={toggleFs}>{fs ? 'יציאה ממסך מלא' : 'סרטון במסך מלא'}</button>
+        <button className="btn ghost" onClick={toggle}>{p ? 'השהיה' : 'המשך צפייה'}</button>
         <button className="btn" onClick={onSkip}>לשאלות</button>
       </div>
     </div>
@@ -140,10 +128,10 @@ export default function App() {
     if (qi + 1 < v.questions.length) { setQi(qi + 1); setPicked(null); }
     else { setDone((d) => ({ ...d, [v.id]: score })); setScreen('result'); }
   };
-  const msg = score === 3 ? 'מוכנים לרעידה!' : score === 2 ? 'כמעט שם' : 'כדאי לצפות שוב';
+  const msg = score === 3 ? 'כל התשובות נכונות!' : score === 2 ? 'כמעט שם' : 'כדאי לצפות שוב';
 
   return (
-    <div className={`stage ${shake ? 'quake' : ''} ${screen === 'video' ? 'focus' : ''}`}>
+    <div className={`stage ${shake ? 'quake' : ''}`}>
       <div className="tape" aria-hidden="true" />
       <header className="topbar">
         <div className="logo"><img src={logo} alt="המכללה הלאומית לאיתנות ישראלית" /></div>
@@ -176,12 +164,7 @@ export default function App() {
       )}
 
       {screen === 'video' && (
-        <main className="screen" key="video">
-          <button className="back" onClick={() => setScreen('home')}>חזרה לתפריט</button>
-          <h2>{v.title}</h2>
-          <Player v={v} playingRef={playing} onSkip={() => setScreen('quiz')} onEnd={() => setTimeout(() => setScreen('quiz'), 1200)} />
-          <p className="lead hint">בסיום הסרטון ממתינות לכם שלוש שאלות.</p>
-        </main>
+        <Player key={v.id} v={v} playingRef={playing} onSkip={() => setScreen('quiz')} onEnd={() => setTimeout(() => setScreen('quiz'), 1200)} />
       )}
 
       {screen === 'quiz' && (
