@@ -43,12 +43,13 @@ function Player({ v, onEnd, onSkip, playingRef }) {
   useEffect(() => {
     ref.current?.play().catch(() => {});
     // הלחיצה על כרטיס הסרטון מאשרת מעבר ישיר למסך מלא (נשאר במסך מלא גם אחרי הסרטון)
-    if (document.fullscreenEnabled && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+    if (window.self === window.top && document.fullscreenEnabled && !document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
     return () => { playingRef.current = false; };
   }, []);
   const toggle = () => (ref.current.paused ? ref.current.play() : ref.current.pause());
   return (
     <div className="player">
+      <h2><span className="vlabel">סרטון:</span> {v.title}</h2>
       <div className="frame">
         <video
           ref={ref} src={v.src} playsInline preload="auto" onClick={toggle}
@@ -82,7 +83,7 @@ export default function App() {
   const [done, setDone] = useState({});
   const [shake, setShake] = useState(false);
   const [full, setFull] = useState(false);
-  const canFull = typeof document !== 'undefined' && document.fullscreenEnabled;
+  const canFull = typeof document !== 'undefined' && document.fullscreenEnabled && window.self === window.top; // לא בתוך עמוד הבית (iframe)
   useEffect(() => {
     const on = () => setFull(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', on);
@@ -128,7 +129,7 @@ export default function App() {
     if (qi + 1 < v.questions.length) { setQi(qi + 1); setPicked(null); }
     else { setDone((d) => ({ ...d, [v.id]: score })); setScreen('result'); }
   };
-  const msg = score === 3 ? 'כל התשובות נכונות!' : score === 2 ? 'כמעט שם' : 'כדאי לצפות שוב';
+  const msg = score === 3 ? 'מוכנים לרעידה!' : score === 2 ? 'כמעט שם' : 'כדאי לצפות שוב';
 
   return (
     <div className={`stage ${shake ? 'quake' : ''}`}>

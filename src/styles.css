@@ -1,6 +1,6 @@
 :root {
   --ink: #131211; --concrete: #211f1d; --dust: #34302c; --bone: #f2eee5;
-  --red: #e2252b; --amber: #ffc21a; --ok: #52d18a;
+  --red: #e29025; --amber: #ffc21a; --ok: #52d18a;
   --head: 'Karantina', 'Assistant', sans-serif;
 }
 * { box-sizing: border-box; margin: 0; -webkit-tap-highlight-color: transparent; }
@@ -92,7 +92,8 @@ h2 { font-size: 5.6rem; line-height: .95; font-weight: 700; color: var(--red); }
 /* וידאו */
 .back { align-self: flex-start; font-size: 2.2rem; font-weight: 700; padding: 1rem 2rem; border: .2rem solid var(--dust); }
 .player { position: fixed; inset: 0; z-index: 50; background: #000; display: flex; flex-direction: column; justify-content: center; gap: 2.4rem; }
-.player .bar, .player .row { margin-inline: 3rem; }
+.vlabel { color: var(--bone); }
+.player h2, .player .bar, .player .row { margin-inline: 3rem; }
 .player .btn { font-size: 3rem; min-height: 9rem; }
 .frame { position: relative; background: #000; aspect-ratio: 16 / 9; width: 100%; }
 video { width: 100%; height: 100%; display: block; object-fit: contain; }
@@ -120,6 +121,7 @@ video { width: 100%; height: 100%; display: block; object-fit: contain; }
 .opt.dim { opacity: .35; }
 .fb { display: flex; flex-direction: column; gap: 1.2rem; padding: 2.2rem 2.6rem; background: var(--bone); color: var(--ink); animation: land .4s; }
 .fb strong { font-size: 4.4rem; line-height: 1; } .fb.good strong { color: #12804a; } .fb.bad strong { color: var(--red); }
+.fb.good .btn { background: var(--ok); color: var(--ink); }
 .fb span { font-size: 2.3rem; line-height: 1.35; font-weight: 700; }
 
 /* סיכום */
@@ -137,7 +139,7 @@ video { width: 100%; height: 100%; display: block; object-fit: contain; }
   h1 { font-size: 7rem; max-width: none; } h2 { font-size: 4rem; }
   .cards { flex-direction: row; margin-top: 1rem; } .card { flex: 1; }
   .card b { font-size: 3.6rem; } .card small { font-size: 1.6rem; } .badge { font-size: 2rem; }
-  .frame { max-height: 76vh; margin-inline: auto; }
+  .frame { max-height: 62vh; margin-inline: auto; }
   .opts { display: grid; grid-template-columns: 1fr 1fr; } .q { font-size: 3rem; } .opt { font-size: 2.1rem; min-height: 6rem; }
   .score { font-size: 14rem; } .score span { font-size: 7rem; }
 }
